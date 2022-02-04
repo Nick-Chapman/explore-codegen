@@ -15,5 +15,6 @@ data Op where
   CLC :: Op
   ADCz :: Byte -> Op
   TYA :: Op
+  ASL :: Op
 
   deriving Show

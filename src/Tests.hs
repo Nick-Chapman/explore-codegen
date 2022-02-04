@@ -6,14 +6,40 @@ import Meaning (semProg,semCode)
 import Program (Prog(..),Signature(..),Stat(..),Exp(..))
 import Semantics (Var(..))
 
+-- TODO: allow easier construction of test examples
 run :: IO ()
 run = do
   run1 prog0
   run1 prog1
   run1 prog2
   run1 prog3
+  run1 prog4
+  run1 prog5
   pure ()
 
+prog5 :: Prog
+prog5 = Prog
+  { signature = Signature { inputs = [x,y]
+                          , outputs = [q]
+                          }
+  , body = Bind { lhs = q, rhs = ShiftL y, body = Stat0 }
+  }
+  where
+    x = Var "x"
+    y = Var "y"
+    q = Var "q"
+
+
+prog4 :: Prog
+prog4 = Prog
+  { signature = Signature { inputs = [x]
+                          , outputs = [q]
+                          }
+  , body = Bind { lhs = q, rhs = ShiftL x, body = Stat0 }
+  }
+  where
+    x = Var "x"
+    q = Var "q"
 
 prog0 :: Prog
 prog0 = Prog
@@ -66,6 +92,8 @@ prog3 = Prog
     q = Var "q"
 
 
+-- TODO: use a small testing framework
+-- TODO: test different compilation configs -- paramater/result passing ABI
 run1 :: Prog -> IO ()
 run1 prog = do
   let CompRes{code,alloc} = compile theConfig prog
@@ -73,6 +101,8 @@ run1 prog = do
   let semH = semProg prog
   let semL = semCode code signature alloc
   let check = (semH == semL)
+  --print ("prog",prog) -- TODO: make nice PP for prog and code
+  --print ("code",code)
   if check then putStrLn "PASS" else do
     print ("prog",prog)
     print ("alloc",alloc)

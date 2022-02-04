@@ -30,6 +30,9 @@ data CompRes = CompRes { code :: [Op], alloc :: Alloc }
 
 compile :: CompileConfig -> Prog -> CompRes
 compile config prog  = CompRes { code, alloc }
+
+  -- This simplistic compiation scheme assumes that the acumulator is always free
+
   where
     CompileConfig{argRegs,resRegs,temps} = config
     Prog{signature,body} = prog
@@ -69,7 +72,7 @@ compile config prog  = CompRes { code, alloc }
         let code2 = compileStat alloc' body
         code1 ++ [STA n] ++ code2
 
-    compileExp :: Alloc -> Exp -> [Op] -- into accumulator
+    compileExp :: Alloc -> Exp -> [Op] -- with result left in the accumulator
     compileExp alloc = \case
       Add v1 v2 -> do
         let n = firstUnusedRegZP alloc
@@ -77,7 +80,10 @@ compile config prog  = CompRes { code, alloc }
         let reg2 = lookAlloc v2 alloc
         move reg2 (RegZP n) ++ move reg1 RegA ++ [CLC,ADCz n]
 
---      ShiftL{} -> undefined
+      ShiftL v1 -> do
+        let reg1 = lookAlloc v1 alloc
+        move reg1 RegA ++ [ASL]
+
       Lit8 byte ->
         [LDAi byte]
 

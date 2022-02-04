@@ -22,7 +22,7 @@ data Sv8
   = Const8 Byte
   | Symbolic8 Sym8
   | Add8 Sv8 Sv8 Sv1
---  | ShiftL8 Sv8
+  | ShiftL8 Sv8
   deriving (Eq,Show)
 
 data Sv1

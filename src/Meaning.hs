@@ -39,7 +39,7 @@ semProg prog = sem
     eval :: Sem -> Exp -> Sv8
     eval sem = \case
       Add v1 v2 -> Add8 (lookSem v1 sem) (lookSem v2 sem) (Const1 False)
---      ShiftL{} -> undefined
+      ShiftL v1 -> ShiftL8 (lookSem v1 sem)
       Lit8 byte -> Const8 byte
 
 
@@ -90,6 +90,8 @@ semCode code signature alloc = sem
         extendEnv RegA
         (Add8 (lookEnv RegA env) (lookEnv (RegZP n) env) (lookCf env))
         env
+      ASL ->
+        extendEnv RegA (ShiftL8 (lookEnv RegA env)) env
 
 ----------------------------------------------------------------------
 -- Env: for computing semantics of low-level code

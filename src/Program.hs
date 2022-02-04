@@ -22,6 +22,6 @@ data Stat where
 
 data Exp
   = Add Var Var -- 8 bit addition, with no carry in or out
---  | ShiftL Var
+  | ShiftL Var
   | Lit8 Byte
   deriving Show
