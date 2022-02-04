@@ -7,21 +7,36 @@ module Program
   ) where
 
 import Semantics (Var,Byte)
+import Text.Printf (printf)
 
 data Prog = Prog { signature :: Signature, body :: Stat }
-  deriving Show
 
 data Signature = Signature { inputs :: [Var], outputs :: [Var] }
-  deriving Show
 
 data Stat where
   Bind :: { lhs :: Var, rhs :: Exp, body :: Stat } -> Stat
   --Unbind :: { var :: Var, body :: Stat } -> Stat
   Stat0 :: Stat
-  deriving Show
 
 data Exp
   = Add Var Var -- 8 bit addition, with no carry in or out
   | ShiftL Var
   | Lit8 Byte
-  deriving Show
+
+
+instance Show Prog where
+  show Prog{signature = Signature{inputs,outputs}, body} =
+    printf "\n  %s <- input\n%s  output: %s\n" (show inputs) (show body) (show outputs)
+
+instance Show Stat where
+  show s = unlines [ printf "  %s <- %s" (show lhs) (show rhs) | (lhs,rhs) <- bindsOf s ]
+    where
+      bindsOf = \case
+        Stat0 -> []
+        Bind{lhs,rhs,body} -> (lhs,rhs) : bindsOf body
+
+instance Show Exp where
+  show = \case
+    Add x1 x2 -> show x1 ++ "+" ++ show x2
+    ShiftL x -> show x ++ "<<1"
+    Lit8 b -> show b

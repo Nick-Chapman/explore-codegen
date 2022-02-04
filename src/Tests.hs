@@ -101,6 +101,7 @@ run1 prog = do
   let semH = semProg prog
   let semL = semCode code signature alloc
   let check = (semH == semL)
+  --print prog
   --print code
   if check then putStrLn "PASS" else do
     print ("prog",prog)

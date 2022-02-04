@@ -13,11 +13,9 @@ import Data.Word8 (Word8)
 newtype Byte = Byte Word8 -- 8bit literal value (0..255)
   deriving (Eq,Ord,Enum,Num)
 
-instance Show Byte where show (Byte x) = show x
-
 -- high level var names
 newtype Var = Var { unVar :: String }
-  deriving (Eq,Ord,Show)
+  deriving (Eq,Ord)
 
 -- semantic values
 data Sv8
@@ -40,3 +38,7 @@ newtype Sym1 = Sym1 String
   deriving (Eq,Show)
 
 
+
+instance Show Byte where show (Byte x) = show x
+
+instance Show Var where show (Var x) = x
