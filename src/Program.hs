@@ -14,7 +14,7 @@ data Prog = Prog { signature :: Signature, body :: Stat }
 data Signature = Signature { inputs :: [Var], outputs :: [Var] }
 
 data Stat where
-  Bind :: { lhs :: Var, rhs :: Exp, body :: Stat } -> Stat
+  BindVar :: { lhs :: Var, rhs :: Exp, body :: Stat } -> Stat
   --Unbind :: { var :: Var, body :: Stat } -> Stat
   Stat0 :: Stat
 
@@ -33,7 +33,7 @@ instance Show Stat where
     where
       bindsOf = \case
         Stat0 -> []
-        Bind{lhs,rhs,body} -> (lhs,rhs) : bindsOf body
+        BindVar{lhs,rhs,body} -> (lhs,rhs) : bindsOf body
 
 instance Show Exp where
   show = \case

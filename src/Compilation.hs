@@ -64,7 +64,7 @@ compile config prog  = CompRes { code, alloc }
     compileStat :: Alloc -> Stat -> [Op]
     compileStat alloc = \case
       Stat0 -> []
-      Bind{lhs=var,rhs,body} -> do
+      BindVar{lhs=var,rhs,body} -> do
         let code1 = compileExp alloc rhs
         let n = firstUnusedRegZP alloc
         let reg = RegZP n
@@ -82,7 +82,8 @@ compile config prog  = CompRes { code, alloc }
 
       ShiftL v1 -> do
         let reg1 = lookAlloc v1 alloc
-        move reg1 RegA ++ [ASL]
+        let bug = False -- introduce a bug here to test the testing framework
+        if bug then [ASL] else move reg1 RegA ++ [ASL]
 
       Lit8 byte ->
         [LDAi byte]

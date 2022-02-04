@@ -32,7 +32,7 @@ semProg prog = sem
 
     run :: Sem -> Stat -> Sem
     run sem = \case
-      Bind{lhs,rhs,body} -> run (extendSem lhs (eval sem rhs) sem) body
+      BindVar{lhs,rhs,body} -> run (extendSem lhs (eval sem rhs) sem) body
       --Unbind{var,body} -> run (restrictSem var sem) body
       Stat0 -> sem
 
