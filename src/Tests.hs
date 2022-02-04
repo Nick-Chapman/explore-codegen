@@ -101,8 +101,7 @@ run1 prog = do
   let semH = semProg prog
   let semL = semCode code signature alloc
   let check = (semH == semL)
-  --print ("prog",prog) -- TODO: make nice PP for prog and code
-  --print ("code",code)
+  --print code
   if check then putStrLn "PASS" else do
     print ("prog",prog)
     print ("alloc",alloc)

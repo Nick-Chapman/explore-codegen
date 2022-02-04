@@ -6,7 +6,7 @@ module Compilation
   ) where
 
 import Allocation (Reg(..),Alloc,initAlloc,lookAlloc,extendAlloc,isAllocated)
-import Asm (Op(..))
+import Asm (Op(..),Code(..))
 import Program (Prog(..),Signature(..),Stat(..),Exp(..))
 import Semantics (Byte)
 
@@ -26,7 +26,7 @@ theConfig = CompileConfig { argRegs = order, resRegs = order, temps = order }
 -- The act of compiling returns the code & a alloc chosen for I/O
 -- TODO: implement compilation such that the semanics are preserved
 
-data CompRes = CompRes { code :: [Op], alloc :: Alloc }
+data CompRes = CompRes { code :: Code, alloc :: Alloc }
 
 compile :: CompileConfig -> Prog -> CompRes
 compile config prog  = CompRes { code, alloc }
@@ -43,6 +43,9 @@ compile config prog  = CompRes { code, alloc }
         iRegs = takeStrict (length iVars) argRegs
         oRegs = takeStrict (length oVars) resRegs
 
+    code :: Code
+    code = Code (codeToClearA ++ compileStat alloc1 body)
+
     -- clear Acc before main body of code
     (alloc1,codeToClearA) =
       case [ x | x <- iVars, lookAlloc x alloc == RegA ] of
@@ -53,9 +56,6 @@ compile config prog  = CompRes { code, alloc }
             nA = firstUnusedRegZP alloc
             codeToClearA = move RegA (RegZP nA)
             alloc1 = extendAlloc varInA (RegZP nA) alloc
-
-    code :: [Op]
-    code = codeToClearA ++ compileStat alloc1 body
 
     firstUnusedRegZP :: Alloc -> Byte
     firstUnusedRegZP alloc =

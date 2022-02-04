@@ -6,7 +6,7 @@ module Meaning
   ) where
 
 import Allocation (Alloc,Reg(..),lookAlloc)
-import Asm (Op(..))
+import Asm (Op(..),Code(..))
 import Program (Prog(..),Signature(..),Stat(..),Exp(..))
 import Semantics (Var(..),Sv8(..),Sv1(..),Sym8(..),Sym1(..))
 
@@ -49,8 +49,8 @@ semProg prog = sem
 ----------------------------------------------------------------------
 -- semantics of low level code
 
-semCode :: [Op] -> Signature -> Alloc -> Sem
-semCode code signature alloc = sem
+semCode :: Code -> Signature -> Alloc -> Sem
+semCode (Code ops) signature alloc = sem
   where
     Signature{inputs=iVars,outputs=oVars} = signature
 
@@ -63,7 +63,7 @@ semCode code signature alloc = sem
       ]
 
     envFinal :: Env
-    envFinal = loop env0 code
+    envFinal = loop env0 ops
 
     env0 :: Env
     env0 = initEnv
