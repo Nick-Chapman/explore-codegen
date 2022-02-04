@@ -11,7 +11,7 @@ import Program (Prog(..),Signature(..),Stat(..),Exp(..))
 import Semantics (Byte)
 
 -- register passing convention perhaps
-data CompileConfig = CompileConfig
+data CompileConfig = CompileConfig -- TODO: rename ABI
   { argRegs :: [Reg]
   , resRegs :: [Reg]
   , temps :: [Reg]
@@ -24,7 +24,10 @@ theConfig = CompileConfig { argRegs = order, resRegs = order, temps = order }
 
 ----------------------------------------------------------------------
 -- The act of compiling returns the code & a alloc chosen for I/O
--- TODO: implement compilation such that the semanics are preserved
+
+
+-- TODO: implement compilation scheme, which reduced movement between registers and zero page
+
 
 data CompRes = CompRes { code :: Code, alloc :: Alloc }
 

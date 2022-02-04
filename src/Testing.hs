@@ -10,8 +10,12 @@ import Meaning (semProg,semCode)
 test :: Prog -> Testing ()
 test prog = T1 (Test {prog})
 
+
+-- Allow testing different ABI config
 data Test = Test { prog :: Prog }
 
+
+-- TODO: move this domain specific test-runner code out of the generic testing framework
 runTest :: Int -> Test -> IO Bool
 runTest n Test{prog} = do
   --putStrLn $ "running test #" ++ show n

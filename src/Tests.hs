@@ -16,6 +16,8 @@ run = Testing.run $ do
   test prog4
   test prog5
 
+-- TODO: allow easier contruction of testcases use HOAS
+
 prog5 :: Prog
 prog5 = Prog
   { signature = Signature { inputs = [x,y]
